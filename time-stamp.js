@@ -49,24 +49,32 @@ exports.default = function (Model) {
   Model.defineProperty(options.createdAt, {
     type: Date,
     required: options.required,
-    defaultFn: 'now'
+    defaultFn: 'now',
+    mysql: {
+      columnName: 'created_at',
+      dataType: 'timestamp'
+    }
   });
 
   Model.defineProperty(options.updatedAt, {
     type: Date,
-    required: options.required
+    required: options.required,
+    mysql: {
+      columnName: 'updated_at',
+      dataType: 'timestamp'
+    }
   });
 
   Model.defineProperty(options.deletedAt, {
     type: Date,
     required: false,
     mysql: {
-      columnName: options.deletedAt,
-      dataType: "timestamp",
+      columnName: 'deleted_at',
+      dataType: 'timestamp',
       dataLength: null,
       dataPrecision: null,
       dataScale: null,
-      nullable: "Y"
+      nullable: 'Y'
     }
   });
 
