@@ -1,7 +1,7 @@
 {
-  "name": "loopback-ds-timestamp-mixin",
-  "version": "3.4.1",
-  "description": "A mixin to automatically generate created and updated Date attributes for loopback Models",
+  "name": "loopback-timestamp-mixin",
+  "version": "1.0.0",
+  "description": "A mixin to automatically generate created, updated and deleted Date attributes for loopback Models",
   "main": "index.js",
   "scripts": {
     "preversion": "npm test",
@@ -17,11 +17,11 @@
     "mixin",
     "timestamp"
   ],
-  "author": "Bryan Clark",
+  "author": "Clovis Maniguet",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/clarkbw/loopback-ds-timestamp-mixin.git"
+    "url": "https://github.com/clovis-maniguet/loopback-timestamp-mixin"
   },
   "babel": {
     "presets": [

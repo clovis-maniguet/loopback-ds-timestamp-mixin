@@ -1,18 +1,13 @@
-[![NPM](https://nodei.co/npm/loopback-ds-timestamp-mixin.png?compact=true)](https://nodei.co/npm/loopback-ds-timestamp-mixin/)
-
-[![dependencies](https://img.shields.io/david/clarkbw/loopback-ds-timestamp-mixin.svg)]()
-[![devDependencies](https://img.shields.io/david/dev/clarkbw/loopback-ds-timestamp-mixin.svg)]()
-[![Build Status](https://travis-ci.org/clarkbw/loopback-ds-timestamp-mixin.svg?branch=master)](https://travis-ci.org/clarkbw/loopback-ds-timestamp-mixin)
-[![Coverage Status](https://coveralls.io/repos/clarkbw/loopback-ds-timestamp-mixin/badge.svg)](https://coveralls.io/r/clarkbw/loopback-ds-timestamp-mixin)
-
 TIMESTAMPS
 =============
 
-This module is designed for the [Strongloop Loopback](https://github.com/strongloop/loopback) framework.  It automatically adds `createdAt` and `updatedAt` attributes to any Model.
+This module is designed for the [Strongloop Loopback](https://github.com/strongloop/loopback) framework.  It automatically adds `createdAt`, `updatedAt` and `deletedAt` attributes to any Model.
 
 `createdAt` will be set to the current Date the by using the default property of the attribute.
 
 `updatedAt` will be set for every update of an object through bulk `updateAll` or instance `model.save` methods.
+
+`deletedAt` will be set for every delete of an object through bulk `deleteAll` or instance `model.delete` methods.
 
 This module is implemented with the `before save` [Operation Hook](http://docs.strongloop.com/display/public/LB/Operation+hooks#Operationhooks-beforesave) which requires the  loopback-datasource-juggler module greater than  [v2.23.0](strongloop/loopback-datasource-juggler@0002aaedeffadda34ae03752d03d0805ab661665).
 
@@ -22,11 +17,6 @@ INSTALL
 ```bash
   npm i loopback-ds-timestamp-mixin --save
 ```
-
-UPSERT ISSUES
-=============
-
-With version 2.33.2 of this module the [upsert validation was turned off](https://github.com/clarkbw/loopback-ds-timestamp-mixin/blob/master/es6/time-stamp.js#L16).  This may create issues for your project if upsert validation is required.  If you require upsert validation, set the `validateUpsert` option to true, however most upserts will fail unless you supply the `createdAt` and `updatedAt` fields or set `required` option to false.
 
 SERVER CONFIG
 =============
@@ -44,7 +34,7 @@ Add the `mixins` property to your `server/model-config.json`:
     ],
     "mixins": [
       "loopback/common/mixins",
-      "../node_modules/loopback-ds-timestamp-mixin",
+      "../node_modules/loopback-timestamp-mixin",
       "../common/mixins"
     ]
   }
@@ -73,15 +63,11 @@ To use with your Models add the `mixins` attribute to the definition object of y
 MODEL OPTIONS
 =============
 
-The attribute names `createdAt` and `updatedAt` are configurable.  To use different values for the default attribute names add the following parameters to the mixin options.
+The attribute names `createdAt`, `updatedAt` and `deletedAt` are configurable.  To use different values for the default attribute names add the following parameters to the mixin options.
 
-You can also configure whether `createdAt` and `updatedAt` are required or not. This can be useful when applying this mixin to existing data where the `required` constraint would fail by default.
-
-By setting the `validateUpsert` option to true you will prevent this mixin from overriding the default Model settings.  With validation turned on most upsert operations will fail with validation errors about missing the required fields like `createdAt` or `updatedAt`.
+You can also configure whether `createdAt`, `updatedAt` and `deletedAt` are required or not. This can be useful when applying this mixin to existing data where the `required` constraint would fail by default.
 
 This mixin uses console logs to warn you whenever something might need your attention. If you would prefer not to receive these warnings, you can disable them by setting the option `silenceWarnings` to `true` on a per model basis.
-
-In this example we change `createdAt` and `updatedAt` to `createdOn` and `updatedOn`, respectively. We also change the default `required` to `false` and set `validateUpsert` to true. We also disable console warnings with `silenceWarnings`.
 
 ```json
   {
@@ -93,10 +79,9 @@ In this example we change `createdAt` and `updatedAt` to `createdOn` and `update
     },
     "mixins": {
       "TimeStamp" : {
-        "createdAt" : "createdOn",
-        "updatedAt" : "updatedOn",
-        "required" : false,
-        "validateUpsert": true,
+        "createdAt" : "created_at",
+        "updatedAt" : "updated_at",
+        "deletedAt" : "deleted_at",
         "silenceWarnings": true
       }
     }

@@ -10,6 +10,7 @@ export default (Model, bootOptions = {}) => {
   const options = Object.assign({
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt',
     required: true,
     validateUpsert: false, // default to turning validation off
     silenceWarnings: false,
@@ -41,6 +42,19 @@ export default (Model, bootOptions = {}) => {
     required: options.required,
   });
 
+  Model.defineProperty(options.deletedAt, {
+    type: Date,
+    required: false,
+    mysql: {
+      columnName: options.deletedAt,
+      dataType: "timestamp",
+      dataLength: null,
+      dataPrecision: null,
+      dataScale: null,
+      nullable: "Y"
+    }
+  });
+
   Model.observe('before save', (ctx, next) => {
     debug('ctx.options', ctx.options);
     if (ctx.options && ctx.options.skipUpdatedAt) { return next(); }
@@ -53,6 +67,28 @@ export default (Model, bootOptions = {}) => {
       ctx.data[options.updatedAt] = new Date();
     }
     return next();
+  });
+
+  /**
+   * Watches destroyAll(), deleteAll(), destroyById() , deleteById(), prototype.destroy(), prototype.delete() methods
+   * and instead of deleting object, sets properties deletedAt and isDeleted.
+   */
+  Model.observe('before delete', function (ctx, next) {
+    Model.updateAll(ctx.where, {[options.deletedAt]: new Date()}).then(function (result) {
+        next(null);
+    });
+  });
+
+  /**
+   * When ever model tries to access data, we add by default isDeleted: false to where query
+   * if there is already in query isDeleted property, then we do not modify query
+   */
+  Model.observe('access', function (ctx, next) {
+    if (!ctx.query.isDeleted && (!ctx.query.where || ctx.query.where && JSON.stringify(ctx.query.where).indexOf('isDeleted') == -1)) {
+        if (!ctx.query.where) ctx.query.where = {};
+        ctx.query.where[options.deletedAt] = null;
+    }
+    next();
   });
 };
 
