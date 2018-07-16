@@ -37,16 +37,20 @@ export default (Model, bootOptions = {}) => {
     defaultFn: 'now',
     mysql: {
       columnName: 'created_at',
-      dataType: 'timestamp'
+      dataType: 'timestamp',
     },
   });
 
   Model.defineProperty(options.updatedAt, {
     type: Date,
-    required: options.required,
+    required: false,
     mysql: {
       columnName: 'updated_at',
       dataType: 'timestamp',
+      dataLength: null,
+      dataPrecision: null,
+      dataScale: null,
+      nullable: 'Y',
     },
   });
 
