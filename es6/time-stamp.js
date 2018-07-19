@@ -82,12 +82,13 @@ export default (Model, bootOptions = {}) => {
   });
 
   /**
-   * Watches destroyAll(), deleteAll(), destroyById() , deleteById(), prototype.destroy(), prototype.delete() methods
+   * Watches destroyAll(), deleteAll(), destroyById() , deleteById(), prototype.destroy(),
+   * prototype.delete() methods
    * and instead of deleting object, sets properties deletedAt and isDeleted.
    */
-  Model.observe('before delete', function (ctx, next) {
-    Model.updateAll(ctx.where, {[options.deletedAt]: new Date()}).then(function (result) {
-        next(null);
+  Model.observe('before delete', (ctx, next) => {
+    Model.updateAll(ctx.where, { [options.deletedAt]: new Date() }).then(() => {
+      next(null);
     });
   });
 
@@ -95,10 +96,12 @@ export default (Model, bootOptions = {}) => {
    * When ever model tries to access data, we add by default isDeleted: false to where query
    * if there is already in query isDeleted property, then we do not modify query
    */
-  Model.observe('access', function (ctx, next) {
-    if (!ctx.query.isDeleted && (!ctx.query.where || ctx.query.where && JSON.stringify(ctx.query.where).indexOf('isDeleted') == -1)) {
+  Model.observe('access', (ctx, next) => {
+    if (!ctx.query.isDeleted) {
+      if (ctx.query.where && JSON.stringify(ctx.query.where).indexOf('isDeleted') === -1) {
         if (!ctx.query.where) ctx.query.where = {};
         ctx.query.where[options.deletedAt] = null;
+      }
     }
     next();
   });
