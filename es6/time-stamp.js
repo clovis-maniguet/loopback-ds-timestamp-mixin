@@ -98,12 +98,12 @@ export default (Model, bootOptions = {}) => {
    * if there is already in query isDeleted property, then we do not modify query
    */
   Model.observe('access', (ctx, next) => {
-    if (!ctx.query.isDeleted) {
-      if (ctx.query.where && JSON.stringify(ctx.query.where).indexOf('isDeleted') === -1) {
-        if (!ctx.query.where) ctx.query.where = {};
-        ctx.query.where[options.deletedAt] = null;
-      }
-    }
+    // If we want the deleted ones
+    if (ctx.query.isDeleted) return next()
+    if (ctx.query.where && JSON.stringify(ctx.query.where).indexOf('isDeleted') === 1) return next()
+    // By defaut set deletedAt to null
+    if (!ctx.query.where) ctx.query.where = {};
+    ctx.query.where[options.deletedAt] = null;
     next();
   });
 };
