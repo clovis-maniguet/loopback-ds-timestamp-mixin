@@ -44,7 +44,7 @@
     "eslint": "^3.16.1",
     "eslint-config-airbnb-base": "^11.0.0",
     "eslint-plugin-import": "^2.0.1",
-    "gulp": "latest",
+    "gulp": "3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-sourcemaps": "^2.4.1",
     "loopback": "=3.4.0",
