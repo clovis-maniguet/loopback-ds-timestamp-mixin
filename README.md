@@ -15,7 +15,7 @@ INSTALL
 =============
 
 ```bash
-  npm i loopback-ds-timestamp-mixin --save
+  npm i loopback-timestamp-mixin --save
 ```
 
 SERVER CONFIG
