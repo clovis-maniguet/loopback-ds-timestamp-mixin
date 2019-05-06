@@ -88,6 +88,9 @@ exports.default = function (Model) {
       return next();
     }
     if (ctx.instance) {
+      if (ctx.isNewInstance) {
+        ctx.instance[options.createdAt] = new Date();
+      }
       debug('%s.%s before save: %s', ctx.Model.modelName, options.updatedAt, ctx.instance.id);
       ctx.instance[options.updatedAt] = new Date();
       ctx.instance[options.deletedAt] = null;
