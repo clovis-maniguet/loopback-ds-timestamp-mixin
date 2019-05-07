@@ -34,6 +34,7 @@ export default (Model, bootOptions = {}) => {
   Model.defineProperty(options.createdAt, {
     type: Date,
     required: options.required,
+    defaultFn: 'now',
     mysql: {
       columnName: 'created_at',
       default: 'CURRENT_TIMESTAMP',
